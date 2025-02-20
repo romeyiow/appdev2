@@ -1,4 +1,6 @@
+
 My Role:
+
 As one of the Lead Developers my contribution to the group 
 began in drafting through pen and paper how the system
 would work; specifically we created flowchart,
@@ -16,6 +18,7 @@ Apart from that problem everything was manageable especially
 with the help of modern technologies.
 
 Teamwork Experience: 
+
 Perhaps I could even say that the real challenge for me was 
 staying motivated to code and participate in group meetings. 
 While I am well aware that I am doing this for my grade, it 
@@ -33,6 +36,7 @@ Sign-in and Landing Page. That way he would have had more time
 perfecting the dashboard. 
 
 Personal Growth and Discipline:
+
 On that note, I realized that I have to be more collaborative 
 and less avoidant to tasks in general (I’m so lazy T-T). 
 Maybe my teams problem with me is that I often choose to 
