@@ -7,16 +7,11 @@ fs.readFile(filename, characterEncoding, (err, data) => {
     if (err) {
         console.error(`Error occured: ${err.message}`);
     } else {
-        console.log(`Content of sample file:\n${data}`)
-    }
-});
-
-const content = "This is a new file created by Node.js!";
-fs.writeFile('newfile.txt', content, (err) => {
-    if (err) {
-        console.error(`Error: ${err.message}`)
-    } else {
-        console.log("New file created successfully!");
+        console.log(`
+            \n============Content of sample file================
+            \n${data}
+            \n==============End of content==============
+            `)
     }
 });
 
@@ -29,10 +24,21 @@ fs.appendFile(filename, appendedContent, (err) => {
     }
 });
 
-fs.unlink('newfile.txt', (err) => {
+const content = "This is a new file created by Node.js!";
+fs.writeFile('newfile.txt', content, (err) => {
     if (err) {
         console.error(`Error: ${err.message}`)
     } else {
-        console.log("File deleted successfully!");
+        console.log("newfile.txt created successfully!");
     }
+
+    fs.unlink('newfile.txt', (err) => {
+        if (err) {
+            console.error(`Error: ${err.message}`)
+        } else {
+            console.log("newfile.txt deleted successfully!");
+        }
+    });
+
 });
+

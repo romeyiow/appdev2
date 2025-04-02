@@ -1,1 +1,7 @@
 This is a sample file with some initial text content.
+Appended content.
+Appended content.
+Appended content.
+Appended content.
+Appended content.
+Appended content.
