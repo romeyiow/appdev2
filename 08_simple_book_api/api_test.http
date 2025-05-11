@@ -1,0 +1,36 @@
+### Test the Simple Book API
+
+# Welcome message
+GET http://localhost:3000/
+
+
+###
+# Get a book by ID
+GET http://localhost:3000/api/books/1
+
+###
+# Get all books
+GET http://localhost:3000/api/books
+
+###
+# Add a new book
+POST http://localhost:3000/api/books
+Content-Type: application/json
+
+{
+  "title": "New Book",
+  "author": "New Author"
+}
+
+###
+# Update a book by ID
+PATCH http://localhost:3000/api/books/5
+Content-Type: application/json
+
+{
+  "title": "Updated Book Title"
+}
+
+###
+# Delete a book by ID
+DELETE http://localhost:3000/api/books/5
