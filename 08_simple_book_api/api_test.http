@@ -1,16 +1,19 @@
-### Test the Simple Book API
+### Test the Simple Book API with REST Client (extention for VSCode)
+// This file contains a collection of HTTP requests to test the Simple Book API.
+// Make sure to start the server before running these requests.
+// You can run the server using the command: node server.js
 
-# Welcome message
+### Welcome message
 GET http://localhost:3000/
 
 
 ###
 # Get a book by ID
-GET http://localhost:3000/api/books/1
+GET http://localhost:3000/api/books/682958ed5cf34cc6cb34a470
 
 ###
 # Get all books
-GET http://localhost:3000/api/books
+GET http://localhost:3000/api/books/
 
 ###
 # Add a new book
@@ -18,19 +21,19 @@ POST http://localhost:3000/api/books
 Content-Type: application/json
 
 {
-  "title": "New Book",
-  "author": "New Author"
+  "title": "New Book Title",
+  "author": "Author Name",
 }
 
 ###
 # Update a book by ID
-PATCH http://localhost:3000/api/books/5
+PATCH http://localhost:3000/api/books/682958ed5cf34cc6cb34a470
 Content-Type: application/json
 
 {
-  "title": "Updated Book Title"
+  "author": "Patched Title"
 }
 
 ###
 # Delete a book by ID
-DELETE http://localhost:3000/api/books/5
+DELETE http://localhost:3000/api/books/68278d9a6466607468295f5ce48c493996916b5e1f4f535d
