@@ -1,0 +1,209 @@
+### Test the Simple Book API with REST Client (extention for VSCode)
+// This file contains a collection of HTTP requests to test the Simple Book API.
+// Make sure to start the server before running these requests.
+// You can run the server using the command: node server.js or npm run devStart
+
+### 
+@baseUrl = http://localhost:3000
+@token = "" # Will be set by signin request. Initialize to empty or a placeholder.
+
+### Welcome message (still public)
+GET {{baseUrl}}/
+
+###
+# ==============================
+# AUTHENTICATION ROUTES
+# ==============================
+
+### Auth: Signup a new user
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "email": "testuser1@example.com",
+  "password": "password123"
+}
+
+### Auth: Signup another new user (for distinct testing)
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "testuser2",
+  "email": "testuser2@example.com",
+  "password": "password456"
+}
+
+### Auth: Signup - Attempt with existing username
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "email": "anotheremail@example.com",
+  "password": "password789"
+}
+
+### Auth: Signup - Attempt with existing email
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "newusernameUnique",
+  "email": "testuser1@example.com",
+  "password": "password101"
+}
+
+### Auth: Signup - Invalid data (e.g., short password)
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "invaliduser",
+  "email": "invalid@example.com",
+  "password": "123"
+}
+
+### Auth: Signup - Missing field (e.g., no email)
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "missingfielduser",
+  "password": "password123"
+}
+
+
+### Auth: Signin with username
+# @name signinUserByUsername
+POST {{baseUrl}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "login": "testuser1",
+  "password": "password123"
+}
+###
+
+# Store the token from the response (VS Code REST Client syntax)
+@token = {{signinUserByUsername.response.body.token}}
+
+### Auth: Signin with email (after signing in with username to get a token for subsequent tests if needed)
+# @name signinUserByEmail
+POST {{baseUrl}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "login": "testuser2@example.com",
+  "password": "password456"
+}
+###
+
+# Update token if you want to use testuser2 for subsequent tests
+@token_user2 = {{signinUserByEmail.response.body.token}}
+
+
+### Auth: Signin - Wrong password
+POST {{baseUrl}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "login": "testuser1",
+  "password": "wrongpassword"
+}
+
+### Auth: Signin - Non-existent user
+POST {{baseUrl}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "login": "nonexistentuser",
+  "password": "password123"
+}
+
+
+###
+# ==============================
+# PROTECTED BOOK ROUTES
+# ==============================
+# Ensure you have a valid @token by running a signin request first.
+# The @token from the LAST successful signin named request will be used.
+# Defaulting to testuser1's token from 'signinUserByUsername'
+
+### Get all books (Protected) - Should FAIL without token
+GET {{baseUrl}}/api/books/
+
+### Get all books (Protected) - With token
+GET {{baseUrl}}/api/books/
+Authorization: Bearer {{token}}
+
+### Add a new book (Protected)
+# @name addBook
+POST {{baseUrl}}/api/books
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Authenticated Book Title",
+  "author": "Authored By TestUser1",
+  "yearPublished": 2023,
+  "user":"684ed1ca7df1626d5d5ea477"
+}
+###
+@newBookId = {{addBook.response.body._id}}
+
+### Get the newly added book by ID (Protected)
+GET {{baseUrl}}/api/books/{{newBookId}}
+Authorization: Bearer {{token}}
+
+### Add another book to be updated and deleted
+# @name createBookForUpdateDelete
+POST {{baseUrl}}/api/books
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Book to be Modified",
+  "author": "Initial Author"
+}
+###
+@bookIdToModify = {{createBookForUpdateDelete.response.body._id}}
+
+
+### Get a specific book by ID (Protected)
+GET {{baseUrl}}/api/books/{{bookIdToModify}}
+Authorization: Bearer {{token}}
+
+### Get a specific book by ID (Protected) - Try WITHOUT token
+GET {{baseUrl}}/api/books/{{bookIdToModify}}
+
+
+### Update a book by ID (Protected)
+PATCH {{baseUrl}}/api/books/{{bookIdToModify}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Updated Book Title by TestUser1",
+  "author": "Updated Author Name"
+}
+
+### Delete a book by ID (Protected)
+# @name deleteBookRequest
+DELETE {{baseUrl}}/api/books/{{bookIdToModify}}
+Authorization: Bearer {{token}}
+
+### Try to get the deleted book (should be 404 Not Found)
+GET {{baseUrl}}/api/books/{{bookIdToModify}}
+Authorization: Bearer {{token}}
+
+### Try to add a book with an EXPIRED or INVALID token (manually change token for testing)
+POST {{baseUrl}}/api/books
+Content-Type: application/json
+Authorization: Bearer aninvalidtoken12345
+
+{
+  "title": "Book with Invalid Token",
+  "author": "Should Not Be Created"
+}
